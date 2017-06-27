@@ -1,0 +1,82 @@
+version: '2.1'
+
+services:
+  users-db:
+    container_name: users-db
+    build: ./users-api/db
+    ports:
+      - '5433:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+  images-db:
+    container_name: images-db
+    build: ./images-api/db
+    ports:
+      - '5434:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+  users-api:
+    container_name: users-api
+    build: ./users-api/
+    volumes:
+      - './users-api:/usr/src/app'
+      - './users-api/package.json:/usr/src/package.json'
+      - /usr/src/app/node_modules
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users
+      - NODE_ENV=${NODE_ENV}
+      - TOKEN_SECRET=ICzX8uISDW9Bv2ZcsPUbeZx8tpVa6ajS
+    depends_on:
+      users-db:
+        condition: service_healthy
+    links:
+      - users-db
+  images-api:
+    container_name: images-api
+    build: ./images-api/
+    volumes:
+      - './images-api:/usr/src/app'
+      - './images-api/package.json:/usr/src/package.json'
+      - /usr/src/app/node_modules
+    ports:
+      - '3001:3001'
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@images-db:5432/images
+      - NODE_ENV=${NODE_ENV}
+      - TOKEN_SECRET=change_to_secret_token
+      - S3_ACCESS_KEY=enter_your_access_key
+      - S3_SECRET_KEY=enter_your_secret_key
+      - S3_REGION=us-east-2
+      - S3_IMAGE_BUCKET=angular4-image-uploads
+    depends_on:
+      images-db:
+        condition: service_healthy
+    links:
+      - images-db
+  images-web:
+      container_name: images-web
+      build: ./images-web/
+      volumes:
+        - './images-web:/usr/src/app'
+        - /usr/src/app/node_modules
+      ports:
+        - '4200:4200'
+        - '49153:49153'
+      environment:
+        - NODE_ENV=${NODE_ENV}
+      depends_on:
+        users-api:
+          condition: service_started
+        images-api:
+          condition: service_started
+      links:
+        - users-api
+        - images-api
