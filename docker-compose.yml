@@ -33,7 +33,7 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users
       - NODE_ENV=${NODE_ENV}
-      - TOKEN_SECRET=ICzX8uISDW9Bv2ZcsPUbeZx8tpVa6ajS
+      - TOKEN_SECRET=change_to_secret_token
     depends_on:
       users-db:
         condition: service_healthy
