@@ -65,7 +65,6 @@ router.delete('/image/:id', auth.isAuthenticated, async (req, res) => {
             return res.status(404).json({ success: false, errorMessage: 'Not found' });
         }
 
-        await s3Object.deleteObject({ Key: req.params.id });
         await knex('images').where('id', req.params.id).del();
         res.json({ success: true });
     } catch (err) {
