@@ -1,0 +1,15 @@
+<div class="modal-header">
+  <h4 class="modal-title">Upload Image(s)</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{errorMessage}}
+  </div>
+  <input type="file" (change)="fileChangeEvent($event)" placeholder="Upload Image(s)" multiple />
+</div>
+<div class="modal-footer">
+  <button type="button" (click)="upload()">Upload</button>
+</div>

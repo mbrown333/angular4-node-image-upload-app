@@ -1,0 +1,7 @@
+#main-app-container {
+    padding-top: 50px;
+}
+
+.nav-link:hover {
+    cursor: pointer;
+}

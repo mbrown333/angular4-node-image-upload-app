@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="card col-lg-3 col-sm-6 col-xs-12" *ngFor="let image of images">
+    <img class="card-img-top img-thumbnail" [src]="image.url" alt="{{image.label}}" (click)="viewImage(image.url)">
+    <div class="card-block">
+      <h4 *ngIf="!image.editMode" class="card-title">{{image.label}}</h4>
+      <div class="form-group">
+        <input *ngIf="image.editMode" type="text" [(ngModel)]="image.label" class="form-control" id="label" name="label" placeholder="Label" />
+      </div>
+      <div *ngIf="!image.editMode">
+        <button (click)="editImage(image)" type="button" class="btn btn-outline-primary">Edit</button>
+        <button (click)="deleteImage(image)" type="button" class="btn btn-outline-danger">Delete</button>
+      </div>
+      <div *ngIf="image.editMode">
+        <button (click)="cancelEdit(image)" type="button" class="btn btn-outline-danger">Cancel</button>
+        <button (click)="updateImage(image)" type="button" class="btn btn-outline-primary">Save</button>
+      </div>
+      <div  *ngIf="image.updateSuccessAlert" class="alert alert-success" role="alert">
+        <strong>Success!</strong> Image succesfully updated.
+      </div>
+    </div>
+  </div>
+</div>
